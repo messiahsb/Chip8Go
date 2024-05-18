@@ -4,8 +4,8 @@ import (
 	//"bytes"
 	"fmt"
 	// "internal/cpu"
-	// "log"
-	// "os"
+	"log"
+	"os"
 	// "time"
 )
 
@@ -23,11 +23,14 @@ type Chip8 struct {
 	key         [16]byte
 }
 
-func (cpu *Chip8) emulateCycle() {
+func (chip *Chip8) handleOpcode() {
 
-	cpu.opcode = uint16(cpu.memory[cpu.PC] << 4)
+	// chip.opcode = uint16(chip.memory[chip.PC] << 4)
+	firstNib := uint16(chip.memory[chip.PC])
 
-	switch cpu.opcode {
+	fmt.Printf("\n This is the first nib: %X\n", firstNib)
+
+	switch firstNib {
 	case 0x00:
 		fmt.Println("0 not handled yet")
 	case 0x01:
@@ -48,24 +51,39 @@ func (cpu *Chip8) emulateCycle() {
 		fmt.Println("8 not handled yet")
 	default:
 		fmt.Println("Opcode unknown")
-
-		if cpu.delay_timer > 0 {
-			cpu.delay_timer--
-		}
-		if cpu.sound_timer > 0 {
-			if cpu.sound_timer == 1 {
-				fmt.Println("BEEP!")
-			}
-			cpu.sound_timer--
-		}
 	}
+
+	// if chip.delay_timer > 0 {
+	// 	chip.delay_timer--
+	// }
+	// if chip.sound_timer > 0 {
+	// 	if chip.sound_timer == 1 {
+	// 		fmt.Println("BEEP!")
+	// 	}
+	// 	chip.sound_timer--
+	// }
 }
 
 func main() {
 	//setup graphics
 	//setup input
 
-	//insitialize chip8cpu and load rom
+	chip := Chip8{}
+	file, err := os.Open("ibm_logo.ch8") // For read access.
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// data := make([]byte, 1000)
+	count, err := file.Read(chip.memory[:])
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("read %d bytes: %q\n", count, chip.memory[:count])
+
+	chip.handleOpcode()
+
+	//insitialize chip8chip and load rom
 	//c8 := Chip8{}
 
 	//for loop for emulation
