@@ -26,10 +26,10 @@ type Chip8 struct {
 func (chip *Chip8) handleOpcode() {
 
 	// chip.opcode = uint16(chip.memory[chip.PC] << 4)
-	firstNib := uint16(chip.memory[chip.PC])
+	firstNib := uint8(chip.memory[chip.PC] >> 4)
 
 	fmt.Printf("\n This is the first nib: %X\n", firstNib)
-
+	fmt.Printf("\n This is the second nib: %X\n", (chip.memory[chip.PC] >> 4))
 	switch firstNib {
 	case 0x00:
 		fmt.Println("0 not handled yet")
@@ -49,6 +49,20 @@ func (chip *Chip8) handleOpcode() {
 		fmt.Println("7 not handled yet")
 	case 0x08:
 		fmt.Println("8 not handled yet")
+	case 0x09:
+		fmt.Println("0 not handled yet")
+	case 0xA:
+		fmt.Println("1 not handled yet")
+	case 0xB:
+		fmt.Println("2 not handled yet")
+	case 0xC:
+		fmt.Println("3 not handled yet")
+	case 0xD:
+		fmt.Println("4 not handled yet")
+	case 0xE:
+		fmt.Println("5 not handled yet")
+	case 0xF:
+		fmt.Println("6 not handled yet")
 	default:
 		fmt.Println("Opcode unknown")
 	}
@@ -74,24 +88,32 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// fileinfo, err := file.Stat()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println("Size of the file:", fileinfo.Size())
+
 	// data := make([]byte, 1000)
 	count, err := file.Read(chip.memory[:])
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("read %d bytes: %q\n", count, chip.memory[:count])
-
-	chip.handleOpcode()
+	//  fmt.Printf("read %d bytes: %q\n", count, chip.memory[:count])
+	fmt.Printf("read %d ", count)
 
 	//insitialize chip8chip and load rom
 	//c8 := Chip8{}
 
-	//for loop for emulation
+	//intialize for loop to run program
+	// chip.PC = 200
+	for chip.PC < 10 {
 
-	//emulate one cycle
+		//emulate one cycle
+		chip.handleOpcode()
+		chip.PC = chip.PC + 1
+		//update screen
 
-	//update screen
-
-	//store keypress
-
+		//store keypress
+	}
 }
