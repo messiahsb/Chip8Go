@@ -28,14 +28,6 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 	return 320, 240
 }
 
-func main() {
-	ebiten.SetWindowSize(640, 480)
-	ebiten.SetWindowTitle("Hello, World!")
-	if err := ebiten.RunGame(&Game{}); err != nil {
-		log.Fatal(err)
-	}
-}
-
 type Chip8 struct {
 	opcode      uint16
 	memory      [4096]byte
@@ -241,6 +233,11 @@ func (chip *Chip8) handleOpcode() {
 
 func main() {
 	//setup graphics
+	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowTitle("Hello, World!")
+	if err := ebiten.RunGame(&Game{}); err != nil {
+		log.Fatal(err)
+	}
 	//setup input
 
 	//intializes cpu
