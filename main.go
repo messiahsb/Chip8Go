@@ -4,7 +4,6 @@ import (
 	//"bytes"
 	"fmt"
 	// "internal/cpu"
-	"log"
 	"math/rand/v2"
 	"os"
 
