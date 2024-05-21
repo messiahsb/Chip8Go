@@ -7,8 +7,35 @@ import (
 	"log"
 	"math/rand/v2"
 	"os"
+
 	// "time"
+	"log"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
+
+type Game struct{}
+
+func (g *Game) Update() error {
+	return nil
+}
+
+func (g *Game) Draw(screen *ebiten.Image) {
+	ebitenutil.DebugPrint(screen, "Hello, World!")
+}
+
+func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+	return 320, 240
+}
+
+func main() {
+	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowTitle("Hello, World!")
+	if err := ebiten.RunGame(&Game{}); err != nil {
+		log.Fatal(err)
+	}
+}
 
 type Chip8 struct {
 	opcode      uint16
@@ -37,6 +64,7 @@ func (chip *Chip8) handleOpcode() {
 	// 1110
 	//000N Call, 00E0 Dislplay clear, 00EE return
 	case 0x0000:
+		chip.PC += 2
 		fmt.Println("0 not handled yet")
 		//switc
 	//1NNN goto address NNN
@@ -45,6 +73,7 @@ func (chip *Chip8) handleOpcode() {
 		fmt.Println("1	handled")
 	//2NNN calls subroutine at NNN
 	case 0x2000:
+		chip.PC += 2
 		fmt.Println("2 not handled yet")
 	//3XNN if Vx == NN
 	case 0x3000:
@@ -194,27 +223,21 @@ func (chip *Chip8) handleOpcode() {
 		fmt.Println("C handled")
 	case 0xD000:
 		//Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels.
+		chip.PC += 2
 		fmt.Println("D not handled yet")
 	case 0xE000:
 		//Skips the next instruction if the key stored in VX is pressed (usually the next instruction is a jump to skip a code block).[22]
 		//Skips the next instruction if the key stored in VX is not pressed (usually the next instruction is a jump to skip a code block)
+		chip.PC += 2
 		fmt.Println("E not handled yet")
 	case 0xF000:
 		//FXXX to set timer or interact with memory
+		chip.PC += 2
 		fmt.Println("F not handled yet")
 	default:
 		fmt.Println("Opcode unknown")
 	}
-	chip.PC += 1
-	// if chip.delay_timer > 0 {
-	// 	chip.delay_timer--
-	// }
-	// if chip.sound_timer > 0 {
-	// 	if chip.sound_timer == 1 {
-	// 		fmt.Println("BEEP!")
-	// 	}
-	// 	chip.sound_timer--
-	// }
+
 }
 
 func main() {
@@ -255,5 +278,16 @@ func main() {
 		//update screen
 
 		//store keypress
+
+		if chip.delay_timer > 0 {
+			chip.delay_timer--
+		}
+
+		if chip.sound_timer > 0 {
+			if chip.sound_timer == 1 {
+				fmt.Println("BEEP!")
+			}
+			chip.sound_timer--
+		}
 	}
 }
